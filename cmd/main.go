@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	sourceImageName = "source2.jpg"
+	sourceImageName = "source.jpg"
 	outputImageName = "out.png"
 	totalCycleCount = 5000
 )
@@ -38,7 +38,7 @@ func cpuProf(fn func()) {
 }
 
 func loadRandomUnsplashImage(width, height int) (image.Image, error) {
-	url := fmt.Sprintf("https://source.unsplash.com/photos/random/%dx%d", width, height)
+	url := fmt.Sprintf("https://source.unsplash.com/random/%dx%d", width, height)
 	res, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -49,8 +49,8 @@ func loadRandomUnsplashImage(width, height int) (image.Image, error) {
 	return img, err
 }
 
-func loadImage(filePath string) (image.Image, error) {
-	file, err := os.Open(filePath)
+func loadImage(src string) (image.Image, error) {
+	file, err := os.Open(src)
 	if err != nil {
 		return nil, fmt.Errorf("source image could not be loaded: %w", err)
 	}
@@ -80,8 +80,8 @@ func saveOutput(img image.Image, filePath string) error {
 
 func main() {
 
-	img, err := loadRandomUnsplashImage(2000, 2000)
-	// img, err := LoadImage(sourceImageName)
+	// img, err := loadRandomUnsplashImage(2000, 2000)
+	img, err := loadImage(sourceImageName)
 	if err != nil {
 		log.Panicln(err)
 	}
