@@ -6,9 +6,7 @@ import (
 	"image/png"
 	"log"
 	"math/rand"
-	"net/http"
 	"os"
-	"runtime/pprof"
 	"time"
 
 	"github.com/joshuaejs/generative-art/sketch"
@@ -20,34 +18,35 @@ var (
 	totalCycleCount = 5000
 )
 
-func cpuProf(fn func()) {
-	f, err := os.Create("cpuprof.out")
-	if err != nil {
-		fmt.Println("Error in creating file for writing cpu profile: ", err)
-		return
-	}
-	defer f.Close()
+// func cpuProf(fn func()) {
+// 	f, err := os.Create("cpuprof.out")
+// 	if err != nil {
+// 		fmt.Println("Error in creating file for writing cpu profile: ", err)
+// 		return
+// 	}
+// 	defer f.Close()
 
-	if e := pprof.StartCPUProfile(f); e != nil {
-		fmt.Println("Error starting CPU profile: ", e)
-		return
-	}
+// 	if err := pprof.StartCPUProfile(f); err != nil {
+// 		fmt.Println("Error starting CPU profile: ", err)
+// 		return
+// 	}
 
-	fn()
-	defer pprof.StopCPUProfile()
-}
+// 	fn()
+// 	defer pprof.StopCPUProfile()
+// }
 
-func loadRandomUnsplashImage(width, height int) (image.Image, error) {
-	url := fmt.Sprintf("https://source.unsplash.com/random/%dx%d", width, height)
-	res, err := http.Get(url)
-	if err != nil {
-		return nil, err
-	}
-	defer res.Body.Close()
+// uncomment for a random image
+// func loadRandomUnsplashImage(width, height int) (image.Image, error) {
+// 	url := fmt.Sprintf("https://source.unsplash.com/random/%dx%d", width, height)
+// 	res, err := http.Get(url)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	defer res.Body.Close()
 
-	img, _, err := image.Decode(res.Body)
-	return img, err
-}
+// 	img, _, err := image.Decode(res.Body)
+// 	return img, err
+// }
 
 func loadImage(src string) (image.Image, error) {
 	file, err := os.Open(src)
@@ -97,7 +96,7 @@ func main() {
 		InitialAlpha:             0.1,
 		AlphaIncrease:            0.06,
 		MinEdgeCount:             3,
-		MaxEdgeCount:             8,
+		MaxEdgeCount:             16,
 	})
 
 	rand.Seed(time.Now().Unix())
