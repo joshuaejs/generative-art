@@ -1,0 +1,49 @@
+name: Go mod update
+
+env:
+  GO_VERSION: 1.18
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "5 14 * * 1"
+
+jobs:
+
+  dep_update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: ${{ env.GO_VERSION }}
+      
+    - name: Update minor dependencies
+      run: go get -t -u ./...
+      
+    - name: Tidy
+      run: go mod tidy
+      
+    - name: Create PR
+      uses: peter-evans/create-pull-request@v4.0.4
+      with:
+        title: "update package dependencies & tidy"
+        body: |
+          this is an automagic PR, and will likely be automated in the future.
+          
+          until then, happy approving.
+        branch: "dep-update"
+        commit-message: |
+          this is an automagic PR, and will likely be automated in the future.
+          
+          until then, happy approving.
+        author: "git bot <gitbot@joshuaejs.me>"
+        delete-branch:
+          true
+        reviewers: |
+          joshuaejs
