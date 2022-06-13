@@ -29,6 +29,12 @@ jobs:
     - name: Tidy
       run: go mod tidy
       
+    - name: Build
+      run: go build -v ./...
+
+    - name: Test
+      run: go test -v ./...
+      
     - name: Create PR
       uses: peter-evans/create-pull-request@v4.0.4
       with:
